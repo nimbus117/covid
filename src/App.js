@@ -1,26 +1,19 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState, useEffect } from 'react';
+import { get } from './Utils/Request';
+import SimpleTable from './components/SimpleTable';
 import './App.css';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  const [countries, setCountries] = useState([]);
+
+  useEffect(() => {
+    (async () =>
+      setCountries(
+        (await get('https://pomber.github.io/covid19/timeseries.json')) || [],
+      ))();
+  });
+
+  return <SimpleTable countries={countries}></SimpleTable>;
 }
 
 export default App;

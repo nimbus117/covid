@@ -1,0 +1,5 @@
+src/serviceWorker.js
+
+# don't ignore eslintrc/prettier.js
+!.eslintrc.js
+!.prettierrc.js
