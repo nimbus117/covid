@@ -4,5 +4,6 @@ export const get = async (url) => {
     return await response.json();
   } catch (error) {
     console.error({ url, error });
+    return null;
   }
 };

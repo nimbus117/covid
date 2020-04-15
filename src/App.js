@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { get } from './utils/Request';
+import { get } from './utils/requests';
 import DataViews from './components/DataViews';
 import './App.css';
 

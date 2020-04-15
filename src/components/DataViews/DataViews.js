@@ -3,35 +3,44 @@ import PropTypes from 'prop-types';
 import DataTable from '../DataTable';
 
 const createTableData = (countriesData) => {
-  const rows = [];
+  const data = [];
   for (const [key, value] of Object.entries(countriesData)) {
     const latest = value[value.length - 1];
-    rows.push({
+    data.push({
       country: key,
       confirmed: latest.confirmed,
       deaths: latest.deaths,
       recovered: latest.recovered,
     });
   }
-  return rows;
+  return data;
 };
 
 const tableHeaderValues = [
   {
     title: 'Country',
     id: 'country',
+    sortType: 'string',
+    sortOrder: 'asc',
   },
   {
     title: 'Confirmed',
     id: 'confirmed',
+    sortType: 'number',
+    sortOrder: 'desc',
+    initialSort: true,
   },
   {
     title: 'Deaths',
     id: 'deaths',
+    sortType: 'number',
+    sortOrder: 'desc',
   },
   {
     title: 'Recovered',
     id: 'recovered',
+    sortType: 'number',
+    sortOrder: 'desc',
   },
 ];
 

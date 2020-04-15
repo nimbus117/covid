@@ -1,27 +1,43 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import './DataTable.css';
+import sort from '../../utils/sort';
+
+const idPrefix = 'dataTable-';
+
+const headerRow = (headerValues, sorter) => (
+  <tr>
+    {headerValues.map((hv) => (
+      <th id={idPrefix + hv.id} onClick={sorter} key={hv.id}>
+        {hv.title}
+      </th>
+    ))}
+  </tr>
+);
+
+const dataRows = (data, headerValues) =>
+  data.map((d, idx) => (
+    <tr key={idx}>
+      {headerValues.map((hv) => (
+        <td key={hv.id}>{d[hv.id]}</td>
+      ))}
+    </tr>
+  ));
+
+const tableSorter = (tableData, setTableData) => (event) => {
+  const dataId = event.target.id.replace(new RegExp(idPrefix), '');
+  setTableData(sort(tableData, dataId));
+};
 
 const DataTable = (props) => {
-  console.log(props);
+  const [tableData, setTableData] = useState(props.data);
+
+  const sorter = tableSorter(tableData, setTableData);
+
   return (
     <table>
-      <thead>
-        <tr>
-          {props.headerValues.map((th) => (
-            <th key={th.id}>{th.title}</th>
-          ))}
-        </tr>
-      </thead>
-      <tbody>
-        {props.data.map((tr, idx) => (
-          <tr key={idx}>
-            {props.headerValues.map((td) => (
-              <td key={td.id}>{tr[td.id]}</td>
-            ))}
-          </tr>
-        ))}
-      </tbody>
+      <thead>{headerRow(props.headerValues, sorter)}</thead>
+      <tbody>{dataRows(tableData, props.headerValues)}</tbody>
     </table>
   );
 };
