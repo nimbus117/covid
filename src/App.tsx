@@ -2,15 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { get } from './utils/requests';
 import DataViews from './components/DataViews';
 import './App.css';
+import { CountriesObj, CountryValue } from './types';
 
-const addWorld = (data) => {
-  const all = [];
+const addWorld = (data: CountriesObj): CountriesObj => {
+  const all: CountryValue[][] = [];
 
-  for (const [, value] of Object.entries(data)) {
-    all.push(value);
+  for (const key in data) {
+    const values = data[key];
+    all.push(values);
   }
 
-  const world = all.flat().reduce((acc, cur) => {
+  const world = all.flat().reduce((acc: any, cur: any) => {
     acc[cur.date] = acc[cur.date]
       ? {
           confirmed: acc[cur.date].confirmed + cur.confirmed,
@@ -27,17 +29,17 @@ const addWorld = (data) => {
 
   data.World = [];
   for (const [key, value] of Object.entries(world)) {
-    data.World.push({ date: key, ...value });
+    data.World.push({ date: key, ...(value as CountryValue) });
   }
 
   return data;
 };
 
-const App = () => {
-  const [countriesData, setCountriesData] = useState(null);
+const App = (): JSX.Element => {
+  const [countriesData, setCountriesData] = useState<CountriesObj | null>(null);
 
-  const getTimeSeries = () => {
-    (async () =>
+  const getTimeSeries = (): void => {
+    (async (): Promise<void> =>
       setCountriesData(
         addWorld(await get('https://pomber.github.io/covid19/timeseries.json')),
       ))();

@@ -1,5 +1,7 @@
-src/serviceWorker.js
+*.js
+serviceWorker.ts
 
 # don't ignore eslintrc/prettier.js
 !.eslintrc.js
 !.prettierrc.js
+!webpack.config.js

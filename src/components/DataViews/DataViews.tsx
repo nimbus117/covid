@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import DataTable from '../DataTable';
+import { CountriesObj, CountryRow, HeaderValue } from '../../types';
 
-const createTableData = (countriesData) => {
+const createTableData = (countriesData: CountriesObj): CountryRow[] => {
   const data = [];
   for (const [key, value] of Object.entries(countriesData)) {
     const latest = value[value.length - 1];
@@ -16,7 +17,7 @@ const createTableData = (countriesData) => {
   return data;
 };
 
-const tableHeaderValues = [
+const tableHeaderValues = (): HeaderValue[] => [
   {
     title: 'Country',
     id: 'country',
@@ -44,12 +45,16 @@ const tableHeaderValues = [
   },
 ];
 
-const DataViews = (props) => {
+type DataViewsProps = {
+  countriesData: CountriesObj;
+};
+
+const DataViews = ({ countriesData }: DataViewsProps): JSX.Element => {
   return (
     <div>
       <DataTable
-        headerValues={tableHeaderValues}
-        data={createTableData(props.countriesData)}
+        headerValues={tableHeaderValues()}
+        data={createTableData(countriesData)}
       />
     </div>
   );

@@ -1,5 +1,6 @@
 module.exports = {
   root: true,
+  parser: '@typescript-eslint/parser',
   env: {
     browser: true,
     node: true,
@@ -9,6 +10,7 @@ module.exports = {
   extends: [
     'eslint:recommended',
     'plugin:react/recommended',
+    'plugin:@typescript-eslint/recommended',
     'plugin:prettier/recommended',
     'prettier/react',
   ],
@@ -19,10 +21,10 @@ module.exports = {
     ecmaVersion: 2020,
     sourceType: 'module',
   },
-  plugins: ['prettier', 'react'],
+  plugins: ['prettier', 'react', '@typescript-eslint'],
   rules: {
     'prettier/prettier': 'warn',
-    'react/jsx-filename-extension': [2, { extensions: ['.js', '.jsx'] }],
+    'react/jsx-filename-extension': [2, { extensions: ['.tsx'] }],
   },
   settings: {
     react: {
@@ -32,7 +34,7 @@ module.exports = {
   overrides: [
     Object.assign(
       {
-        files: ['**/*.test.js'],
+        files: ['**/*.test.tsx'],
         env: { jest: true },
         plugins: ['jest'],
       },
