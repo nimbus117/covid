@@ -21,26 +21,21 @@ const tableHeaderValues = (): HeaderValue[] => [
   {
     title: 'Country',
     id: 'country',
-    sortType: 'string',
     sortOrder: 'asc',
   },
   {
     title: 'Confirmed',
     id: 'confirmed',
-    sortType: 'number',
     sortOrder: 'desc',
-    initialSort: true,
   },
   {
     title: 'Deaths',
     id: 'deaths',
-    sortType: 'number',
     sortOrder: 'desc',
   },
   {
     title: 'Recovered',
     id: 'recovered',
-    sortType: 'number',
     sortOrder: 'desc',
   },
 ];

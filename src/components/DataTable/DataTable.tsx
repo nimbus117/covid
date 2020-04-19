@@ -1,41 +1,25 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import './DataTable.css';
-import sort from '../../utils/sort';
-import { CountryRow, HeaderValue, TableDataSorter } from '../../types';
+import { CountryRow, HeaderValue, HeaderId } from '../../types';
+import DataTableHeader from './DataTableHeader';
+import DataTableBody from './DataTableBody';
 
 const idPrefix = 'dataTable-';
 
-const headerRow = (
-  headerValues: HeaderValue[],
-  sorter: TableDataSorter,
-): JSX.Element => (
-  <tr>
-    {headerValues.map((hv) => (
-      <th id={idPrefix + hv.id} onClick={sorter} key={hv.id}>
-        {hv.title}
-      </th>
-    ))}
-  </tr>
-);
+const sortTableData = (
+  tableData: CountryRow[],
+  property: HeaderId,
+  sortOrder: 'asc' | 'desc',
+): CountryRow[] => {
+  const sortDescending = (a: CountryRow, b: CountryRow): number =>
+    a[property] > b[property] ? -1 : a[property] < b[property] ? 1 : 0;
 
-const dataRows = (
-  data: CountryRow[],
-  headerValues: HeaderValue[],
-): JSX.Element[] =>
-  data.map((d, idx) => (
-    <tr key={idx}>
-      {headerValues.map((hv) => (
-        <td key={hv.id}>{d[hv.id as keyof CountryRow]}</td>
-      ))}
-    </tr>
-  ));
+  const sortAscending = (a: CountryRow, b: CountryRow): number =>
+    a[property] > b[property] ? -1 : a[property] < b[property] ? 1 : 0;
 
-const sortTableData = (tableData: any, setTableData: any): TableDataSorter => (
-  event: any,
-): void => {
-  const dataId = event.target.id.replace(new RegExp(idPrefix), '');
-  setTableData(sort(tableData, dataId));
+  const sorter = sortOrder === 'asc' ? sortAscending : sortDescending;
+
+  return tableData.concat().sort(sorter);
 };
 
 type DataTableProps = {
@@ -44,14 +28,23 @@ type DataTableProps = {
 };
 
 const DataTable = ({ data, headerValues }: DataTableProps): JSX.Element => {
-  const [tableData, setTableData] = useState(data);
+  const [tableData, setTableData] = useState(
+    sortTableData(data, 'confirmed', 'desc'),
+  );
 
-  const sorter = sortTableData(tableData, setTableData);
+  const sorter = (event: any): void => {
+    const dataId = event.target.id.replace(new RegExp(idPrefix), '');
+    setTableData(sortTableData(tableData, dataId, 'desc'));
+  };
 
   return (
     <table>
-      <thead>{headerRow(headerValues, sorter)}</thead>
-      <tbody>{dataRows(tableData, headerValues)}</tbody>
+      <DataTableHeader
+        headerValues={headerValues}
+        sorter={sorter}
+        idPrefix={idPrefix}
+      />
+      <DataTableBody data={tableData} headerValues={headerValues} />
     </table>
   );
 };

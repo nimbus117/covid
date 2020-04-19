@@ -16,14 +16,15 @@ export interface CountryRow {
   recovered: number;
 }
 
+export type HeaderId = 'confirmed' | 'deaths' | 'recovered' | 'country';
+export type HeaderTitle = 'Confirmed' | 'Deaths' | 'Recovered' | 'Country';
+
 export interface HeaderValue {
-  title: string;
-  id: string;
-  sortType: 'string' | 'number';
+  title: HeaderTitle;
+  id: HeaderId;
   sortOrder: 'asc' | 'desc';
-  initialSort?: boolean;
 }
 
 export interface TableDataSorter {
-  (event: any): void;
+  (event: React.MouseEvent<HTMLTableHeaderCellElement>): void;
 }
