@@ -25,6 +25,10 @@ export interface HeaderValue {
   sortOrder: 'asc' | 'desc';
 }
 
+export type SortEvent = React.MouseEvent<HTMLTableHeaderCellElement> & {
+  target: { id: string };
+};
+
 export interface TableDataSorter {
-  (event: React.MouseEvent<HTMLTableHeaderCellElement>): void;
+  (event: SortEvent): void;
 }

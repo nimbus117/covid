@@ -12,7 +12,17 @@ const addWorld = (data: CountriesObj): CountriesObj => {
     all.push(values);
   }
 
-  const world = all.flat().reduce((acc: any, cur: any) => {
+  interface WorldValue {
+    deaths: number;
+    confirmed: number;
+    recovered: number;
+  }
+
+  interface WorldObj {
+    [key: string]: WorldValue;
+  }
+
+  const world = all.flat().reduce((acc: WorldObj, cur: CountryValue) => {
     acc[cur.date] = acc[cur.date]
       ? {
           confirmed: acc[cur.date].confirmed + cur.confirmed,

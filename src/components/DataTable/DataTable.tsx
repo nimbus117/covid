@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { CountryRow, HeaderValue, HeaderId } from '../../types';
+import { CountryRow, HeaderValue, HeaderId, SortEvent } from '../../types';
 import DataTableHeader from './DataTableHeader';
 import DataTableBody from './DataTableBody';
 
@@ -32,8 +32,11 @@ const DataTable = ({ data, headerValues }: DataTableProps): JSX.Element => {
     sortTableData(data, 'confirmed', 'desc'),
   );
 
-  const sorter = (event: any): void => {
-    const dataId = event.target.id.replace(new RegExp(idPrefix), '');
+  const sorter = (event: SortEvent): void => {
+    const dataId = event.target.id.replace(
+      new RegExp(idPrefix),
+      '',
+    ) as HeaderId;
     setTableData(sortTableData(tableData, dataId, 'desc'));
   };
 
