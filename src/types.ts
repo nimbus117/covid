@@ -22,7 +22,7 @@ export type HeaderTitle = 'Confirmed' | 'Deaths' | 'Recovered' | 'Country';
 export interface HeaderValue {
   title: HeaderTitle;
   id: HeaderId;
-  sortOrder: 'asc' | 'desc';
+  sortAsc: true | false;
 }
 
 export type SortEvent = React.MouseEvent<HTMLTableHeaderCellElement> & {

@@ -57,14 +57,10 @@ const App = (): JSX.Element => {
 
   useEffect(getTimeSeries, []);
 
-  return (
-    <div>
-      {countriesData ? (
-        <DataViews countriesData={countriesData} />
-      ) : (
-        <div>Loading...</div>
-      )}
-    </div>
+  return countriesData ? (
+    <DataViews countriesData={countriesData} />
+  ) : (
+    <div>Loading...</div>
   );
 };
 

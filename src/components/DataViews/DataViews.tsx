@@ -21,22 +21,22 @@ const tableHeaderValues = (): HeaderValue[] => [
   {
     title: 'Country',
     id: 'country',
-    sortOrder: 'asc',
+    sortAsc: true,
   },
   {
     title: 'Confirmed',
     id: 'confirmed',
-    sortOrder: 'desc',
+    sortAsc: false,
   },
   {
     title: 'Deaths',
     id: 'deaths',
-    sortOrder: 'desc',
+    sortAsc: false,
   },
   {
     title: 'Recovered',
     id: 'recovered',
-    sortOrder: 'desc',
+    sortAsc: false,
   },
 ];
 
@@ -46,12 +46,10 @@ type DataViewsProps = {
 
 const DataViews = ({ countriesData }: DataViewsProps): JSX.Element => {
   return (
-    <div>
-      <DataTable
-        headerValues={tableHeaderValues()}
-        data={createTableData(countriesData)}
-      />
-    </div>
+    <DataTable
+      headerValues={tableHeaderValues()}
+      data={createTableData(countriesData)}
+    />
   );
 };
 
