@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { get } from './utils/requests';
-import DataViews from './components/DataViews';
+import DataViews from './components/DataViews/DataViews';
 import './App.css';
 import { CountriesObj, CountryValue } from './types';
 

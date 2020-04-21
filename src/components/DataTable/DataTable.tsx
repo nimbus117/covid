@@ -1,38 +1,23 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { CountryRow, HeaderValue, HeaderId, SortEvent } from '../../types';
+import { CountryRow, HeaderValue, HeaderId } from '../../types';
 import DataTableHeader from './DataTableHeader';
 import DataTableBody from './DataTableBody';
 
 const idPrefix = 'dataTable-';
 
-const sortTableData = (
-  tableData: CountryRow[],
-  property: HeaderId,
+const sort = (
+  data: CountryRow[],
+  sortBy: HeaderId,
   sortAsc: true | false,
 ): CountryRow[] => {
-  const sortDescending = (a: CountryRow, b: CountryRow): number =>
-    a[property] > b[property] ? -1 : a[property] < b[property] ? 1 : 0;
-
-  const sortAscending = (a: CountryRow, b: CountryRow): number =>
-    a[property] > b[property] ? -1 : a[property] < b[property] ? 1 : 0;
-
-  const sorter = sortAsc ? sortAscending : sortDescending;
-
-  return tableData.concat().sort(sorter);
-};
-
-const sortDirection = (
-  headerValues: HeaderValue[],
-  headerId: HeaderId,
-): true | false => {
-  const attributeName = 'sortAsc';
-  const sortElement = document.getElementById(idPrefix + headerId);
-  const defaultSortAsc = headerValues.find((hv) => hv.id.match(headerId))
-    ?.sortAsc;
-  const currentSort = sortElement?.getAttribute(attributeName);
-
-  return true;
+  return data
+    .concat()
+    .sort(
+      (a: CountryRow, b: CountryRow): number =>
+        (a[sortBy] > b[sortBy] ? 1 : a[sortBy] < b[sortBy] ? -1 : 0) *
+        (sortAsc ? 1 : -1),
+    );
 };
 
 type DataTableProps = {
@@ -41,31 +26,37 @@ type DataTableProps = {
 };
 
 const DataTable = ({ data, headerValues }: DataTableProps): JSX.Element => {
-  const initialSortId = 'confirmed';
-  const [tableData, setTableData] = useState(
-    sortTableData(
-      data,
-      initialSortId,
-      sortDirection(headerValues, initialSortId),
-    ),
-  );
+  const initialSortHeader = headerValues.find((hv) => hv.id === 'confirmed');
+  const [sortValue, setSortValue] = useState(initialSortHeader);
 
-  const sorter = (event: SortEvent): void => {
-    const dataId = event.target.id.replace(
-      new RegExp(idPrefix),
-      '',
-    ) as HeaderId;
-    setTableData(sortTableData(tableData, dataId, false));
+  const requestSort = (headerValue: HeaderValue): void => {
+    const newValue = { ...headerValue };
+    newValue.sortAsc =
+      headerValue.id === sortValue?.id
+        ? !sortValue.sortAsc
+        : headerValue.sortAsc;
+    setSortValue(newValue);
   };
 
   return (
     <table>
       <DataTableHeader
         headerValues={headerValues}
-        sorter={sorter}
+        requestSort={requestSort}
         idPrefix={idPrefix}
       />
-      <DataTableBody data={tableData} headerValues={headerValues} />
+      <DataTableBody
+        data={React.useMemo(
+          () =>
+            sort(
+              data,
+              sortValue?.id as HeaderId,
+              sortValue?.sortAsc as true | false,
+            ),
+          [data, sortValue],
+        )}
+        headerValues={headerValues}
+      />
     </table>
   );
 };

@@ -1,12 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import DataTable from '../DataTable';
+import DataTable from '../DataTable/DataTable';
 import { CountriesObj, CountryRow, HeaderValue } from '../../types';
 
-const createTableData = (countriesData: CountriesObj): CountryRow[] => {
+const createTableData = (
+  countriesData: CountriesObj,
+  dataAge = 1,
+): CountryRow[] => {
   const data = [];
   for (const [key, value] of Object.entries(countriesData)) {
-    const latest = value[value.length - 1];
+    const latest = value[value.length - dataAge];
     data.push({
       country: key,
       confirmed: latest.confirmed,

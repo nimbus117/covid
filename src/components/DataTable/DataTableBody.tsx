@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { HeaderValue, CountryRow } from '../../types';
+import { numberWithCommas } from '../../utils/numbers';
 
 type DataTableBodyProps = {
   data: CountryRow[];
