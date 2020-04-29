@@ -57,7 +57,7 @@ const DataViews = ({ countriesData }: DataViewsProps): JSX.Element => {
 };
 
 DataViews.propTypes = {
-  countriesData: PropTypes.object,
+  countriesData: PropTypes.object.isRequired,
 };
 
 export default DataViews;

@@ -1,27 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './DataTableHeader.css';
 import { HeaderValue, TableSortRequester } from '../../types';
 
 type DataTableHeaderProps = {
   headerValues: HeaderValue[];
   requestSort: TableSortRequester;
-  idPrefix: string;
 };
 
 const DataTableHeader = ({
   headerValues,
   requestSort,
-  idPrefix,
 }: DataTableHeaderProps): JSX.Element => (
   <thead>
     <tr>
       {headerValues.map((hv) => (
-        <th
-          id={idPrefix + hv.id}
-          onClick={(): void => requestSort(hv)}
-          key={hv.id}
-        >
+        <th onClick={(): void => requestSort(hv)} key={hv.id}>
           {hv.title}
         </th>
       ))}
@@ -30,9 +23,8 @@ const DataTableHeader = ({
 );
 
 DataTableHeader.propTypes = {
-  headerValues: PropTypes.array,
+  headerValues: PropTypes.arrayOf(PropTypes.object).isRequired,
   requestSort: PropTypes.func,
-  idPrefix: PropTypes.string,
 };
 
 export default DataTableHeader;

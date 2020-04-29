@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { CountryRow, HeaderValue, HeaderId } from '../../types';
 import DataTableHeader from './DataTableHeader';
 import DataTableBody from './DataTableBody';
-
-const idPrefix = 'dataTable-';
+import './DataTable.css';
 
 const sort = (
   data: CountryRow[],
@@ -28,6 +27,7 @@ type DataTableProps = {
 const DataTable = ({ data, headerValues }: DataTableProps): JSX.Element => {
   const initialSortHeader = headerValues.find((hv) => hv.id === 'confirmed');
   const [sortValue, setSortValue] = useState(initialSortHeader);
+  const [filterValue, setFilterValue] = useState('');
 
   const requestSort = (headerValue: HeaderValue): void => {
     const newValue = { ...headerValue };
@@ -38,32 +38,45 @@ const DataTable = ({ data, headerValues }: DataTableProps): JSX.Element => {
     setSortValue(newValue);
   };
 
+  const filteredData: CountryRow[] = filterValue
+    ? data.filter((x) =>
+        x.country.toLowerCase().includes(filterValue.toLowerCase()),
+      )
+    : data;
+
+  const sortedData = useMemo(
+    () =>
+      sort(
+        filteredData,
+        sortValue?.id as HeaderId,
+        sortValue?.sortAsc as true | false,
+      ),
+    // turn numbers into comma seperated strings
+    [filteredData, sortValue],
+  );
+
   return (
-    <table>
-      <DataTableHeader
-        headerValues={headerValues}
-        requestSort={requestSort}
-        idPrefix={idPrefix}
+    <div id="data-table">
+      <input
+        type="text"
+        placeholder="Filter country..."
+        value={filterValue}
+        onChange={(e) => setFilterValue(e.target.value)}
       />
-      <DataTableBody
-        data={React.useMemo(
-          () =>
-            sort(
-              data,
-              sortValue?.id as HeaderId,
-              sortValue?.sortAsc as true | false,
-            ),
-          [data, sortValue],
-        )}
-        headerValues={headerValues}
-      />
-    </table>
+      <table>
+        <DataTableHeader
+          headerValues={headerValues}
+          requestSort={requestSort}
+        />
+        <DataTableBody data={sortedData} headerValues={headerValues} />
+      </table>
+    </div>
   );
 };
 
 DataTable.propTypes = {
-  data: PropTypes.array,
-  headerValues: PropTypes.array,
+  data: PropTypes.arrayOf(PropTypes.object).isRequired,
+  headerValues: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default DataTable;
