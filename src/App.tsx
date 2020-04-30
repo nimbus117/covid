@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { get } from './utils/requests';
 import DataViews from './components/DataViews/DataViews';
 import './App.css';
-import { CountriesObj, CountryValue } from './types';
+import { CountriesObj, CountryValue, WorldObj } from './types';
 
 const addWorld = (data: CountriesObj): CountriesObj => {
   const all: CountryValue[][] = [];
@@ -10,16 +10,6 @@ const addWorld = (data: CountriesObj): CountriesObj => {
   for (const key in data) {
     const values = data[key];
     all.push(values);
-  }
-
-  interface WorldValue {
-    deaths: number;
-    confirmed: number;
-    recovered: number;
-  }
-
-  interface WorldObj {
-    [key: string]: WorldValue;
   }
 
   const world = all.flat().reduce((acc: WorldObj, cur: CountryValue) => {

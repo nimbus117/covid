@@ -28,3 +28,11 @@ export interface HeaderValue {
 export interface TableSortRequester {
   (id: HeaderValue): void;
 }
+
+export interface WorldObj {
+  [key: string]: {
+    deaths: number;
+    confirmed: number;
+    recovered: number;
+  };
+}
