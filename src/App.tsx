@@ -1,57 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import { get } from './utils/requests';
+import React from 'react';
 import DataViews from './components/DataViews/DataViews';
+import Loading from './components/Loading/Loading';
 import './App.css';
-import { CountriesObj, CountryValue, WorldObj } from './types';
-
-const addWorld = (data: CountriesObj): CountriesObj => {
-  const all: CountryValue[][] = [];
-
-  for (const key in data) {
-    const values = data[key];
-    all.push(values);
-  }
-
-  const world = all.flat().reduce((acc: WorldObj, cur: CountryValue) => {
-    acc[cur.date] = acc[cur.date]
-      ? {
-          confirmed: acc[cur.date].confirmed + cur.confirmed,
-          deaths: acc[cur.date].deaths + cur.deaths,
-          recovered: acc[cur.date].recovered + cur.recovered,
-        }
-      : {
-          confirmed: cur.confirmed,
-          deaths: cur.deaths,
-          recovered: cur.recovered,
-        };
-    return acc;
-  }, {});
-
-  data.World = [];
-  for (const [key, value] of Object.entries(world)) {
-    data.World.push({ date: key, ...(value as CountryValue) });
-  }
-
-  return data;
-};
+import { CountriesObj } from './types';
+import { useFetch } from './hooks/useFetch';
+import { addWorld } from './utils/addWorld';
 
 const App = (): JSX.Element => {
-  const [countriesData, setCountriesData] = useState<CountriesObj | null>(null);
-
-  const getTimeSeries = (): void => {
-    (async (): Promise<void> =>
-      setCountriesData(
-        addWorld(await get('https://pomber.github.io/covid19/timeseries.json')),
-      ))();
-  };
-
-  useEffect(getTimeSeries, []);
-
-  return countriesData ? (
-    <DataViews countriesData={countriesData} />
-  ) : (
-    <div>Loading...</div>
+  // https://httpstat.us/400
+  const { isLoading, data, error } = useFetch(
+    'https://pomber.github.io/covid19/timeseries.json',
   );
+
+  if (isLoading) return <Loading />;
+
+  if (error) return <div>{error}</div>;
+
+  return <DataViews countriesData={addWorld(data as CountriesObj)} />;
 };
 
 export default App;

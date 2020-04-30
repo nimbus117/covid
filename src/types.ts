@@ -1,38 +1,49 @@
-export interface CountryValue {
+export type CountryValue = {
   deaths: number;
   confirmed: number;
   recovered: number;
   date: string;
-}
+};
 
-export interface CountriesObj {
+export type CountriesObj = {
   [key: string]: CountryValue[];
-}
+};
 
-export interface CountryRow {
+export type CountryRow = {
   country: string;
   deaths: number;
   confirmed: number;
   recovered: number;
-}
+};
 
 export type HeaderId = 'confirmed' | 'deaths' | 'recovered' | 'country';
 export type HeaderTitle = 'Confirmed' | 'Deaths' | 'Recovered' | 'Country';
 
-export interface HeaderValue {
+export type HeaderValue = {
   title: HeaderTitle;
   id: HeaderId;
   sortAsc: true | false;
-}
+};
 
-export interface TableSortRequester {
+export type TableSortRequester = {
   (id: HeaderValue): void;
-}
+};
 
-export interface WorldObj {
+export type WorldObj = {
   [key: string]: {
     deaths: number;
     confirmed: number;
     recovered: number;
   };
-}
+};
+
+export type UseFetchState = {
+  data: CountriesObj | null;
+  isLoading: boolean;
+  error: string | null;
+};
+
+export type UseFetchAction =
+  | { type: 'request' }
+  | { type: 'success'; data: {} }
+  | { type: 'failure'; error: string };
