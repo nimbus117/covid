@@ -67,6 +67,7 @@ const DataTable = ({ data, headerValues }: DataTableProps): JSX.Element => {
         <DataTableHeader
           headerValues={headerValues}
           requestSort={requestSort}
+          sortValue={sortValue as HeaderValue}
         />
         <DataTableBody data={sortedData} headerValues={headerValues} />
       </table>

@@ -1,3 +1,8 @@
 #data-table th {
   cursor: pointer;
 }
+
+#data-table div {
+  display: flex;
+  align-items: center;
+}
