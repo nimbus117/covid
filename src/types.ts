@@ -45,5 +45,5 @@ export type UseFetchState = {
 
 export type UseFetchAction =
   | { type: 'request' }
-  | { type: 'success'; data: {} }
+  | { type: 'success'; data: CountriesObj }
   | { type: 'failure'; error: string };
