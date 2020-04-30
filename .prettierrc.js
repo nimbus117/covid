@@ -4,13 +4,4 @@ module.exports = {
   singleQuote: true,
   trailingComma: 'all',
   arrowParens: 'always',
-  overrides: [
-    {
-      files: ['package.json'],
-      options: {
-        useTabs: false,
-        tabWidth: 2,
-      },
-    },
-  ],
 };
