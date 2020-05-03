@@ -1,23 +1,10 @@
 import React, { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { CountryRow, HeaderValue, HeaderId } from '../../types';
+import { sortObjectsArray } from '../../utils/utils';
 import DataTableHeader from './DataTableHeader';
 import DataTableBody from './DataTableBody';
 import './DataTable.css';
-
-const sort = (
-  data: CountryRow[],
-  sortBy: HeaderId,
-  sortAsc: true | false,
-): CountryRow[] => {
-  return data
-    .concat()
-    .sort(
-      (a: CountryRow, b: CountryRow): number =>
-        (a[sortBy] > b[sortBy] ? 1 : a[sortBy] < b[sortBy] ? -1 : 0) *
-        (sortAsc ? 1 : -1),
-    );
-};
 
 type DataTableProps = {
   data: CountryRow[];
@@ -30,29 +17,30 @@ const DataTable = ({ data, headerValues }: DataTableProps): JSX.Element => {
   const [filterValue, setFilterValue] = useState('');
 
   const requestSort = (headerValue: HeaderValue): void => {
-    const newValue = { ...headerValue };
-    newValue.sortAsc =
-      headerValue.id === sortValue?.id
-        ? !sortValue.sortAsc
-        : headerValue.sortAsc;
-    setSortValue(newValue);
+    setSortValue(
+      (sortValue): HeaderValue => ({
+        ...headerValue,
+        sortAsc:
+          headerValue.id === sortValue?.id
+            ? !sortValue.sortAsc
+            : headerValue.sortAsc,
+      }),
+    );
   };
 
-  const filteredData: CountryRow[] = filterValue
-    ? data.filter((x) =>
-        x.country.toLowerCase().includes(filterValue.toLowerCase()),
-      )
-    : data;
-
-  const sortedData = useMemo(
+  const sortedAndFilteredData = useMemo(
     () =>
-      sort(
-        filteredData,
+      sortObjectsArray(
+        filterValue
+          ? data.filter((x) =>
+              x.country.toLowerCase().includes(filterValue.toLowerCase()),
+            )
+          : data,
         sortValue?.id as HeaderId,
         sortValue?.sortAsc as true | false,
       ),
     // turn numbers into comma seperated strings
-    [filteredData, sortValue],
+    [data, filterValue, sortValue],
   );
 
   return (
@@ -61,7 +49,7 @@ const DataTable = ({ data, headerValues }: DataTableProps): JSX.Element => {
         type="text"
         placeholder="Filter country..."
         value={filterValue}
-        onChange={(e) => setFilterValue(e.target.value)}
+        onChange={(e): void => setFilterValue(e.target.value)}
       />
       <table>
         <DataTableHeader
@@ -69,7 +57,10 @@ const DataTable = ({ data, headerValues }: DataTableProps): JSX.Element => {
           requestSort={requestSort}
           sortValue={sortValue as HeaderValue}
         />
-        <DataTableBody data={sortedData} headerValues={headerValues} />
+        <DataTableBody
+          data={sortedAndFilteredData as CountryRow[]}
+          headerValues={headerValues}
+        />
       </table>
     </div>
   );

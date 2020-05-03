@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import './Loading.css';
 
-const Loading = ({ text = 'Loading', speed = 300 }) => {
+const Loading = ({ text = 'Loading', speed = 300 }): JSX.Element => {
   const [shownText, setShownText] = useState(text);
 
   useEffect(() => {
@@ -10,7 +10,7 @@ const Loading = ({ text = 'Loading', speed = 300 }) => {
       () => setShownText((t) => (t === text + '...' ? text : t + '.')),
       speed,
     );
-    return () => clearInterval(timer);
+    return (): void => clearInterval(timer);
   });
 
   return <div id="loading">{shownText}</div>;

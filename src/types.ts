@@ -47,3 +47,5 @@ export type UseFetchAction =
   | { type: 'request' }
   | { type: 'success'; data: CountriesObj }
   | { type: 'failure'; error: string };
+
+export type SortData = { [key: string]: string | number }[];

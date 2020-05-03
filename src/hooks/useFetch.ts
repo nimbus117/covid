@@ -28,7 +28,7 @@ const reducer = (
   }
 };
 
-export const useFetch = (url: string) => {
+export const useFetch = (url: string): UseFetchState => {
   const [state, dispatch] = useReducer(reducer, {
     data: null,
     error: null,
@@ -36,7 +36,7 @@ export const useFetch = (url: string) => {
   });
 
   useEffect(() => {
-    const request = async () => {
+    const request = async (): Promise<void> => {
       dispatch({ type: 'request' });
       try {
         const response = await fetch(url);

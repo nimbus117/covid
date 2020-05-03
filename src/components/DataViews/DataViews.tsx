@@ -20,7 +20,7 @@ const createTableData = (
   return data;
 };
 
-const tableHeaderValues = (): HeaderValue[] => [
+const tableHeaderValues: HeaderValue[] = [
   {
     title: 'Country',
     id: 'country',
@@ -50,7 +50,7 @@ type DataViewsProps = {
 const DataViews = ({ countriesData }: DataViewsProps): JSX.Element => {
   return (
     <DataTable
-      headerValues={tableHeaderValues()}
+      headerValues={tableHeaderValues}
       data={createTableData(countriesData)}
     />
   );
