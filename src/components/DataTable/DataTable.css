@@ -6,3 +6,7 @@
   display: flex;
   align-items: center;
 }
+
+#data-table-filters {
+  justify-content: space-between;
+}

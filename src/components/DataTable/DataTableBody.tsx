@@ -1,11 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { HeaderValue, CountryRow } from '../../types';
+import { addCommasToInt } from '../../utils/utils';
 
 type DataTableBodyProps = {
   data: CountryRow[];
   headerValues: HeaderValue[];
 };
+
+const format = (value: string | number): string =>
+  typeof value === 'number' ? addCommasToInt(value) : value;
 
 const DataTableBody = ({
   data,
@@ -15,7 +19,7 @@ const DataTableBody = ({
     {data.map((d, idx) => (
       <tr key={idx}>
         {headerValues.map((hv) => (
-          <td key={hv.id}>{d[hv.id as keyof CountryRow]}</td>
+          <td key={hv.id}>{format(d[hv.id as keyof CountryRow])}</td>
         ))}
       </tr>
     ))}

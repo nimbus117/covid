@@ -1,20 +1,67 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { CountryRow, HeaderValue, HeaderId } from '../../types';
+import { CountriesObj, CountryRow, HeaderValue, HeaderId } from '../../types';
 import { sortObjectsArray } from '../../utils/utils';
 import DataTableHeader from './DataTableHeader';
 import DataTableBody from './DataTableBody';
 import './DataTable.css';
 
-type DataTableProps = {
-  data: CountryRow[];
-  headerValues: HeaderValue[];
+const headerValues: HeaderValue[] = [
+  {
+    title: 'Country',
+    id: 'country',
+    sortAsc: true,
+  },
+  {
+    title: 'Confirmed',
+    id: 'confirmed',
+    sortAsc: false,
+  },
+  {
+    title: 'Deaths',
+    id: 'deaths',
+    sortAsc: false,
+  },
+  {
+    title: 'Recovered',
+    id: 'recovered',
+    sortAsc: false,
+  },
+];
+
+const createTableData = (
+  countriesData: CountriesObj,
+  dataAge = 1,
+): CountryRow[] => {
+  const data = [];
+  for (const [key, value] of Object.entries(countriesData)) {
+    const day = value[value.length - dataAge];
+    data.push({
+      country: key,
+      confirmed: day.confirmed,
+      deaths: day.deaths,
+      recovered: day.recovered,
+    });
+  }
+  return data;
 };
 
-const DataTable = ({ data, headerValues }: DataTableProps): JSX.Element => {
+type DataTableProps = {
+  data: CountriesObj;
+};
+
+const DataTable = ({ data }: DataTableProps): JSX.Element => {
   const initialSortHeader = headerValues.find((hv) => hv.id === 'confirmed');
+  const [tableData, setTableData] = useState(createTableData(data));
   const [sortValue, setSortValue] = useState(initialSortHeader);
   const [filterValue, setFilterValue] = useState('');
+
+  const dates = Object.values(data)[0]
+    .map((x) => x.date)
+    .reverse();
+
+  const handleDateChange = (e: React.FormEvent<HTMLSelectElement>): void =>
+    setTableData(createTableData(data, parseInt(e.currentTarget.value)));
 
   const requestSort = (headerValue: HeaderValue): void => {
     setSortValue(
@@ -28,29 +75,33 @@ const DataTable = ({ data, headerValues }: DataTableProps): JSX.Element => {
     );
   };
 
-  const sortedAndFilteredData = useMemo(
-    () =>
-      sortObjectsArray(
-        filterValue
-          ? data.filter((x) =>
-              x.country.toLowerCase().includes(filterValue.toLowerCase()),
-            )
-          : data,
-        sortValue?.id as HeaderId,
-        sortValue?.sortAsc as true | false,
-      ),
-    // turn numbers into comma seperated strings
-    [data, filterValue, sortValue],
+  const sortedAndFilteredData = sortObjectsArray(
+    filterValue
+      ? tableData.filter((x) =>
+          x.country.toLowerCase().includes(filterValue.toLowerCase()),
+        )
+      : tableData,
+    sortValue?.id as HeaderId,
+    sortValue?.sortAsc as true | false,
   );
 
   return (
     <div id="data-table">
-      <input
-        type="text"
-        placeholder="Filter country..."
-        value={filterValue}
-        onChange={(e): void => setFilterValue(e.target.value)}
-      />
+      <div id="data-table-filters">
+        <input
+          type="text"
+          placeholder="Filter country..."
+          value={filterValue}
+          onChange={(e): void => setFilterValue(e.target.value)}
+        />
+        <select id="test" name="test" onChange={handleDateChange}>
+          {dates.map((d, i) => (
+            <option key={d} value={i + 1}>
+              {new Date(d).toDateString()}
+            </option>
+          ))}
+        </select>
+      </div>
       <table>
         <DataTableHeader
           headerValues={headerValues}
@@ -67,8 +118,7 @@ const DataTable = ({ data, headerValues }: DataTableProps): JSX.Element => {
 };
 
 DataTable.propTypes = {
-  data: PropTypes.arrayOf(PropTypes.object).isRequired,
-  headerValues: PropTypes.arrayOf(PropTypes.object).isRequired,
+  data: PropTypes.object.isRequired,
 };
 
 export default DataTable;

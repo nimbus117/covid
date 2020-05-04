@@ -1,6 +1,7 @@
 import { CountriesObj, CountryValue, WorldObj } from '../types';
 
 export const addWorld = (data: CountriesObj): CountriesObj => {
+  const newData = { ...data };
   const all: CountryValue[][] = [];
 
   for (const key in data) {
@@ -23,10 +24,10 @@ export const addWorld = (data: CountriesObj): CountriesObj => {
     return acc;
   }, {});
 
-  data.World = [];
+  newData.World = [];
   for (const [key, value] of Object.entries(world)) {
-    data.World.push({ date: key, ...(value as CountryValue) });
+    newData.World.push({ date: key, ...(value as CountryValue) });
   }
 
-  return data;
+  return newData;
 };
